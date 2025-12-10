@@ -1,26 +1,320 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Colores principales IMPULSA - Brand */
+  --impulsa-primary: #7B2CBF;        /* Violeta Eléctrico */
+  --impulsa-primary-light: #9D4EDD;
+  --impulsa-primary-dark: #5A189A;
+  --impulsa-secondary: #00F5D4;      /* Turquesa Neón */
+  --impulsa-accent: #00F5D4;
+  
+  /* Fondos y superficies */
+  --background: #F3F4F6;             /* Gris Humo */
+  --surface: #FFFFFF;                /* Blanco Nube */
+  --surface-elevated: #FFFFFF;
+  
+  /* Texto */
+  --foreground: #1A1A2E;             /* Gris Plomo */
+  --foreground-muted: #4A4E69;       /* Gris Medio */
+  --foreground-subtle: #6B7280;
+  
+  /* Estados */
+  --success: #10B981;
+  --error: #EF4444;
+  --warning: #F59E0B;
+  
+  /* Bordes y sombras */
+  --border: #E5E7EB;
+  --border-focus: var(--impulsa-primary);
+  --ring: rgba(123, 44, 191, 0.3);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--impulsa-primary);
+  --color-primary-light: var(--impulsa-primary-light);
+  --color-primary-dark: var(--impulsa-primary-dark);
+  --color-secondary: var(--impulsa-secondary);
+  --color-accent: var(--impulsa-accent);
+  --color-surface: var(--surface);
+  --color-muted: var(--foreground-muted);
+  --color-subtle: var(--foreground-subtle);
+  --color-border: var(--border);
+  --color-success: var(--success);
+  --color-error: var(--error);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Animaciones personalizadas */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(123, 44, 191, 0.5);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(123, 44, 191, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(123, 44, 191, 0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Estilos de input personalizados */
+.input-field {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  background-color: white;
+  transition: all 0.2s ease-out;
+  outline: none;
+}
+
+/* Input con ícono a la izquierda */
+.input-field.pl-12 {
+  padding-left: 3rem;
+}
+
+.input-field::placeholder {
+  color: var(--foreground-subtle);
+}
+
+.input-field:focus {
+  border-color: var(--impulsa-primary);
+  box-shadow: 0 0 0 4px rgba(123, 44, 191, 0.1);
+}
+
+.input-field:disabled {
+  background-color: #f9fafb;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.input-field.error {
+  border-color: var(--error);
+}
+
+.input-field.error:focus {
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
+}
+
+.input-field.success {
+  border-color: var(--success);
+}
+
+.input-field.success:focus {
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+}
+
+/* Botón principal */
+.btn-primary {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, var(--impulsa-primary) 0%, var(--impulsa-primary-dark) 100%);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 15px -3px rgba(123, 44, 191, 0.25);
+  transition: all 0.2s ease-out;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 20px 25px -5px rgba(123, 44, 191, 0.3);
+  transform: translateY(-2px);
+}
+
+.btn-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(123, 44, 191, 0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary:disabled:hover {
+  box-shadow: 0 10px 15px -3px rgba(123, 44, 191, 0.25);
+}
+
+/* Tarjeta de autenticación */
+.auth-card {
+  width: 100%;
+  max-width: 28rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: white;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f1f5f9;
+}
+
+@media (min-width: 768px) {
+  .auth-card {
+    padding: 2.5rem;
+  }
+}
+
+/* Fondo con patrón geométrico sutil */
+.auth-background {
+  background-color: #F3F4F6;
+  background-image: 
+    radial-gradient(at 40% 20%, rgba(123, 44, 191, 0.08) 0px, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(0, 245, 212, 0.06) 0px, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(123, 44, 191, 0.05) 0px, transparent 50%),
+    radial-gradient(at 80% 100%, rgba(0, 245, 212, 0.04) 0px, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%237B2CBF' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Label de campo */
+.field-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+
+/* Texto de ayuda del campo */
+.field-hint {
+  font-size: 0.75rem;
+  color: var(--foreground-muted);
+  margin-top: 0.375rem;
+}
+
+/* Mensaje de error del campo */
+.field-error {
+  font-size: 0.75rem;
+  color: var(--error);
+  margin-top: 0.375rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+/* Link estilizado */
+.auth-link {
+  color: var(--impulsa-primary);
+  font-weight: 600;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  color: var(--impulsa-primary-dark);
+}
+
+/* Caja de error general */
+.error-box {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Caja de éxito */
+.success-box {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background-color: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #059669;
+  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Utilidades adicionales para Navbar */
+@media (min-width: 768px) {
+  .md\:h-18 {
+    height: 4.5rem;
+  }
+}
+
+/* Backdrop blur fallback */
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Scrollbar personalizado */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--foreground-muted);
+}
+
+/* Gradiente de texto */
+.text-gradient {
+  background: linear-gradient(135deg, var(--impulsa-primary) 0%, var(--impulsa-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }

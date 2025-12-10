@@ -1,23 +1,21 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import supabase from '../lib/supabaseClient';
-
 import NavBar from '../../components/NavBar';
 
 export default function Marketplace() {
+  const router = useRouter();
   const [workshops, setWorkshops] = useState([]);
   const [session, setSession] = useState(null);
-  const [checkedSession, setCheckedSession] = useState(false); // indica que ya comprobamos la sesión
+  const [checkedSession, setCheckedSession] = useState(false);
 
   useEffect(() => {
-    // obtener sesión inicial
     const loadSession = async () => {
       try {
         const { data, error } = await supabase.auth.getSession();
-        if (error) {
-          console.warn('Error getSession:', error);
-        }
+        if (error) console.warn('Error getSession:', error);
         setSession(data?.session ?? null);
       } catch (err) {
         console.error('getSession catch:', err);
@@ -29,16 +27,16 @@ export default function Marketplace() {
 
     loadSession();
 
-    // listener para cambios de auth (login/logout)
     const { data: listener } = supabase.auth.onAuthStateChange((_event, newSession) => {
       setSession(newSession ?? null);
-      // no tocamos checkedSession aquí: ya fue comprobada
     });
 
-    // traer talleres
     const fetchWorkshops = async () => {
       try {
-        const { data, error } = await supabase.from('workshops').select('*');
+        const { data, error } = await supabase
+          .from('workshops')
+          .select('*, instructor:profiles!workshops_instructor_id_fkey(full_name)')
+          .eq('status', 'published');
         if (!error && data) setWorkshops(data);
         if (error) console.warn('Error fetching workshops:', error);
       } catch (err) {
@@ -48,82 +46,48 @@ export default function Marketplace() {
 
     fetchWorkshops();
 
-    return () => {
-      // desuscribimos listener
-      listener?.subscription?.unsubscribe?.();
-    };
+    return () => listener?.subscription?.unsubscribe?.();
   }, []);
 
-  // --- enrollWorkshop: envía workshop_id + user_id (Opción A: rápida) ---
-  const enrollWorkshop = async (id) => {
-    // obtener la sesión actual justo antes de inscribir (evita usar estado stale)
-    const { data: currentData, error: getSessionError } = await supabase.auth.getSession();
-    const currentSession = currentData?.session ?? null;
-
-    if (getSessionError) {
-      console.error('Error obteniendo sesión al inscribir:', getSessionError);
-      return alert('Error al verificar sesión. Intenta cerrar sesión y volver a ingresar.');
-    }
-
-    if (!currentSession) {
-      return alert('Debes iniciar sesión primero');
-    }
-
-    // construimos body incluyendo user_id (rápido, pero menos seguro)
-    const body = {
-      workshop_id: id,
-      user_id: currentSession.user.id
-    };
-
-    console.log('enrollWorkshop -> body:', body);
-
-    try {
-      const response = await fetch('/api/enroll', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        // credentials: 'include', // opcional con esta opción; no imprescindible aquí
-        body: JSON.stringify(body)
-      });
-
-      const respJson = await response.json().catch(() => ({}));
-
-      if (!response.ok) {
-        console.warn('Enroll backend error (non-ok):', respJson);
-        return alert('Error al inscribirse: ' + (respJson.error || JSON.stringify(respJson)));
-      }
-
-      alert('Inscripción correcta ✅');
-      console.log('Enrolamiento OK:', respJson);
-    } catch (err) {
-      console.error('Error en enrollWorkshop (fetch):', err);
-      alert('Error al inscribirse. Revisa la consola para más detalles.');
-    }
+  const viewDetails = (id) => {
+    router.push(`/marketplace/${id}`);
   };
 
   return (
     <>
-      {/* renderizamos NavBar sólo después de que hayamos comprobado la sesión
-          esto evita que NavBar reciba props inconsistentes en el primer render */}
       {checkedSession ? (
         <NavBar user={session?.user ?? null} />
       ) : (
-        // opcional: espacio vacío hasta que sepamos el estado de sesión
         <div style={{ height: 64 }} />
       )}
 
       <h1 style={{ textAlign: 'center', marginTop: 24 }}>Marketplace</h1>
+      <p style={{ textAlign: 'center', color: '#6b7280', marginBottom: 24 }}>
+        Explora los talleres disponibles y encuentra el que más te interese
+      </p>
 
       <div style={gridStyle}>
         {workshops.map(w => (
           <div key={w.id} style={cardStyle}>
             <div>
-              <h3>{w.title}</h3>
-              <p>{w.description}</p>
+              {w.category && <span style={categoryBadge}>{w.category}</span>}
+              <h3 style={titleStyle}>{w.title}</h3>
+              <p style={descStyle}>{w.description}</p>
+              {w.instructor?.full_name && (
+                <p style={instructorStyle}>👤 {w.instructor.full_name}</p>
+              )}
+              {w.date && (
+                <p style={dateStyle}>
+                  📅 {new Date(w.date).toLocaleDateString('es-CL', { 
+                    day: 'numeric', 
+                    month: 'short' 
+                  })}
+                  {w.time && ` • ${w.time}`}
+                </p>
+              )}
             </div>
-            <button style={buttonStyle} onClick={() => enrollWorkshop(w.id)}>
-              Ver Detalles e Inscribir
+            <button style={buttonStyle} onClick={() => viewDetails(w.id)}>
+              Ver Detalles
             </button>
           </div>
         ))}
@@ -134,27 +98,72 @@ export default function Marketplace() {
 
 const gridStyle = {
   display: 'grid',
-  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-  gap: 16,
-  padding: 24
+  gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+  gap: 20,
+  padding: '0 24px 24px'
 };
 
 const cardStyle = {
-  padding: 16,
-  borderRadius: 12,
-  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+  padding: 20,
+  borderRadius: 16,
+  boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
   background: '#fff',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'space-between'
+  justifyContent: 'space-between',
+  transition: 'transform 0.2s, box-shadow 0.2s'
+};
+
+const categoryBadge = {
+  display: 'inline-block',
+  background: '#ede9fe',
+  color: '#6d28d9',
+  padding: '4px 10px',
+  borderRadius: 12,
+  fontSize: 12,
+  fontWeight: 500,
+  marginBottom: 8
+};
+
+const titleStyle = {
+  fontSize: 18,
+  fontWeight: 600,
+  color: '#1f2937',
+  margin: '0 0 8px 0'
+};
+
+const descStyle = {
+  fontSize: 14,
+  color: '#6b7280',
+  lineHeight: 1.5,
+  margin: '0 0 12px 0',
+  display: '-webkit-box',
+  WebkitLineClamp: 3,
+  WebkitBoxOrient: 'vertical',
+  overflow: 'hidden'
+};
+
+const instructorStyle = {
+  fontSize: 13,
+  color: '#4b5563',
+  margin: '0 0 4px 0'
+};
+
+const dateStyle = {
+  fontSize: 13,
+  color: '#4b5563',
+  margin: 0
 };
 
 const buttonStyle = {
-  padding: '8px 16px',
+  padding: '10px 20px',
   borderRadius: 9999,
   background: '#4f46e5',
   color: 'white',
   border: 'none',
   cursor: 'pointer',
-  marginTop: 12
+  marginTop: 16,
+  fontWeight: 500,
+  fontSize: 14,
+  transition: 'background 0.2s'
 };
