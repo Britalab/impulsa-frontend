@@ -49,28 +49,22 @@ export default function MainLayout({ children }) {
     };
   }, []);
 
-  // Verificar si el usuario es admin
-  async function checkAdminStatus(userId) {
+  // Verificar si el usuario es admin consultando la tabla profiles
+  async function checkAdminStatus(authUserId) {
     try {
-      // Opción 1: Verificar en user_metadata
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user?.user_metadata?.role === 'admin') {
-        setIsAdmin(true);
-        return;
-      }
-
-      // Opción 2: Verificar en una tabla de admins (si existe)
       const { data, error } = await supabase
-        .from('admins')
-        .select('id')
-        .eq('user_id', userId)
+        .from('profiles')
+        .select('role')
+        .eq('auth_user_id', authUserId)
         .single();
 
-      if (data && !error) {
+      if (data && !error && data.role === 'admin') {
         setIsAdmin(true);
+      } else {
+        setIsAdmin(false);
       }
     } catch (error) {
-      // Si la tabla no existe o hay error, simplemente no es admin
+      console.error('Error verificando rol de admin:', error);
       setIsAdmin(false);
     }
   }

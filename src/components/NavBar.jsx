@@ -46,7 +46,7 @@ export default function NavBar({ user, isAdmin = false }) {
 
   const navLinks = [
     { href: '/marketplace', label: 'Explorar Talleres', icon: BookOpen },
-    { href: '/mis-inscripciones', label: 'Mis Inscripciones', icon: ClipboardList },
+    { href: '/perfil', label: 'Mis Inscripciones', icon: ClipboardList },
   ];
 
   return (
@@ -89,6 +89,17 @@ export default function NavBar({ user, isAdmin = false }) {
               Quiero Enseñar
             </Link>
 
+            {/* Botón Panel Admin - Solo visible para administradores */}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 rounded-full transition-all hover:shadow-sm"
+              >
+                <Shield className="w-4 h-4" />
+                Panel Admin
+              </Link>
+            )}
+
             {userEmail ? (
               /* Menú de usuario autenticado */
               <div className="relative" ref={userMenuRef}>
@@ -123,25 +134,13 @@ export default function NavBar({ user, isAdmin = false }) {
                       </Link>
                       
                       <Link
-                        href="/mis-inscripciones"
+                        href="/perfil"
                         onClick={() => setUserMenuOpen(false)}
                         className="flex items-center gap-3 px-4 py-2.5 text-sm text-muted hover:text-foreground hover:bg-gray-50 transition-colors"
                       >
                         <ClipboardList className="w-4 h-4" />
                         Mis Inscripciones
                       </Link>
-
-                      {/* Link Admin - Solo si es admin */}
-                      {isAdmin && (
-                        <Link
-                          href="/admin"
-                          onClick={() => setUserMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-accent hover:bg-orange-50 transition-colors"
-                        >
-                          <Shield className="w-4 h-4" />
-                          Panel Admin
-                        </Link>
-                      )}
                     </div>
 
                     {/* Cerrar sesión */}
@@ -213,6 +212,18 @@ export default function NavBar({ user, isAdmin = false }) {
               Quiero Enseñar
             </Link>
 
+            {/* Botón Panel Admin móvil - Solo visible para administradores */}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center justify-center gap-2 mt-2 px-4 py-3 text-base font-medium text-red-700 bg-red-50 border border-red-200 rounded-xl hover:bg-red-100 transition-colors"
+              >
+                <Shield className="w-5 h-5" />
+                Panel Admin
+              </Link>
+            )}
+
             {/* Sección de usuario */}
             {userEmail ? (
               <div className="mt-4 pt-4 border-t border-gray-100 space-y-1">
@@ -235,17 +246,6 @@ export default function NavBar({ user, isAdmin = false }) {
                   <User className="w-5 h-5" />
                   Mi Perfil
                 </Link>
-
-                {isAdmin && (
-                  <Link
-                    href="/admin"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center gap-3 px-4 py-3 text-base text-accent hover:bg-orange-50 rounded-lg transition-colors"
-                  >
-                    <Shield className="w-5 h-5" />
-                    Panel Admin
-                  </Link>
-                )}
 
                 <button
                   onClick={() => {
