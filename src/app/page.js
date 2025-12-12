@@ -88,16 +88,17 @@ export default function HomePage() {
 
             {/* Título */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Comparte tu conocimiento,
+              Conecta, aprende e
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00F5D4] to-[#9D4EDD]">
-                Aprende de tus pares
+                Impulsa
               </span>
+              {' '}tu futuro
             </h1>
 
             {/* Subtítulo */}
             <p className="text-lg md:text-xl text-white/70 mb-10 max-w-2xl mx-auto">
-              Conecta con estudiantes de tu universidad, imparte talleres sobre lo que dominas 
+              Conecta con estudiantes y profesionales, imparte talleres sobre lo que dominas 
               y aprende nuevas habilidades de otros impulsores.
             </p>
 
