@@ -1,36 +1,51 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Impulsa – Plataforma Web de Tutorías Académicas
 
-## Getting Started
+## Descripción
 
-First, run the development server:
+Impulsa es una aplicación web orientada a la gestión de tutorías académicas.
+La plataforma permite que universidades e institutos postulen para ofrecer clases de apoyo y que los estudiantes puedan acceder a reforzamiento de contenidos o aprendizaje complementario.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+El sistema actúa como intermediario entre instituciones educativas y estudiantes, centralizando la información y facilitando la interacción mediante formularios y navegación estructurada.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Actores del sistema
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+* Instituciones educativas: postulan para impartir tutorías o reforzamientos.
+* Estudiantes: solicitan apoyo académico en áreas específicas.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Objetivo del proyecto
 
-## Learn More
+Diseñar y desarrollar una interfaz funcional que permita el ingreso de datos, validación de información y navegación entre secciones, simulando el flujo básico de una plataforma de servicios educativos.
 
-To learn more about Next.js, take a look at the following resources:
+## Tecnologías utilizadas
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* HTML5
+* CSS3
+* JavaScript
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Funcionalidades
 
-## Deploy on Vercel
+* Registro de instituciones
+* Ingreso de datos académicos
+* Formularios con validación de campos
+* Navegación entre secciones
+* Mensajes de error ante información incompleta o incorrecta
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Cómo ejecutar el proyecto
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Clonar o descargar el repositorio
+2. Abrir la carpeta del proyecto
+3. Ejecutar el archivo `index.html` en el navegador
+   (recomendado usar Live Server en Visual Studio Code)
+
+## Aprendizajes obtenidos
+
+* Estructuración de una aplicación web basada en roles de usuario
+* Manipulación del DOM
+* Validación de datos ingresados por el usuario
+* Diseño de interfaz orientada a interacción
+* Organización de proyecto frontend
+
+## Autor
+
+Britanny Labraña 
+
